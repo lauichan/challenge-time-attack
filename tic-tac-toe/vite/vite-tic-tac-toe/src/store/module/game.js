@@ -13,13 +13,17 @@ const gameSlice = createSlice({
   initialState,
   reducers: {
     setBoard: (state, action) => {
-      state.current = !state.current;
-      state.board[action.payload.idx] = action.payload.value;
-      if (!state.current) {
-        state.olist.push(action.payload.idx);
+      if (state.finish) return;
+
+      state.board[action.payload.idx] = state.current ? "X" : "O";
+
+      if (state.current) {
+        state.olist.push(action.payload);
       } else {
-        state.xlist.push(action.payload.idx);
+        state.xlist.push(action.payload);
       }
+
+      state.current = !state.current;
     },
     gameOver: (state, action) => {
       state.finish = true;

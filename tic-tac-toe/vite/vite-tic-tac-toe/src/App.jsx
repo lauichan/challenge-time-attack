@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { gameOver, setBoard } from "./store/module/game";
 import React from "react";
 
-const COMPLETE = [
+const COMPLETE_LIST = [
   [0, 1, 2],
   [3, 4, 5],
   [6, 7, 8],
@@ -17,28 +17,26 @@ function App() {
   const dispatch = useDispatch();
   const { current, board, xlist, olist, finish } = useSelector((state) => state.game);
 
-  const player = current ? "O" : "X";
-
-  function checkComplete(list) {
-    for (const success of COMPLETE) {
-      const filterdlist = list.filter((item) => success.includes(item));
-      if (success.every((value) => filterdlist.includes(value))) {
+  const checkComplete = (list) => {
+    for (const line of COMPLETE_LIST) {
+      if (line.every((value) => list.includes(value))) {
         dispatch(gameOver());
-        return <>{current ? "X가 승리했습니다." : "O가 승리했습니다."}</>;
+        return true;
       }
     }
-  }
+    return false;
+  };
 
   const handleClick = (e) => {
     if (finish) return;
-    dispatch(setBoard({ idx: +e.target.name, value: player }));
+    dispatch(setBoard({ idx: +e.target.name, value: current ? "O" : "X" }));
     e.target.disabled = true;
   };
 
   return (
     <>
-      <p>{checkComplete(xlist)}</p>
-      <p>{checkComplete(olist)}</p>
+      {checkComplete(xlist) ? <p>X가 승리했습니다.</p> : null}
+      {checkComplete(olist) ? <p>O가 승리했습니다.</p> : null}
       <section className="board">
         {board.map((button, i) => {
           return (
@@ -53,10 +51,3 @@ function App() {
 }
 
 export default App;
-
-//3x3 그리드의 Tic Tac Toe 게임판을 구현합니다.
-
-//플레이어는 번갈아가며 게임판의 셀을 클릭하여 자신의 기호(X 또는 O)를 표시할 수 있습니다.
-
-//수평, 수직, 대각선을 이어 자신의 기호가 3개 연결되면, 그 플레이어가 승자
-//승자가 결정되면, 게임을 더 이상 진행할 수 없으며, 승자를 알리는 메시지가 표시
