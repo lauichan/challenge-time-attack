@@ -19,3 +19,9 @@ button {
   border: none;
   font-size: 50px;
 }
+
+.resetBtn {
+  margin: 1rem;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+}
